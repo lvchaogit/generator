@@ -1,0 +1,71 @@
+package ${package}.${moduleName}.api.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+/**
+ * @author l2503
+ * @date 2022-02-07
+ */
+@Data
+@Builder
+@AllArgsConstructor
+public class ${api.className}Request {
+
+    ##    #if($pathParam.size>0)
+    ##    private String[] pathParam;
+    ##    #end
+
+    #if($api.requestBody)
+        private BodyParam requestBody;
+
+        @Data
+        @Builder
+        @AllArgsConstructor
+        public static class BodyParam {
+            #foreach ($column in $api.requestBody)
+                private $column.attrType $column.attrname;
+            #end
+        }
+    #end
+    #if($api.requestFormData)
+        private RequestFormData requestFormData;
+
+        @Data
+        @Builder
+        @AllArgsConstructor
+        public static class RequestFormData {
+            #foreach ($column in $api.requestFormData)
+                private $column.attrType $column.attrname;
+            #end
+        }
+    #end
+
+    #if($api.requestParam)
+        private RequestParam requestParam;
+
+        @Data
+        @Builder
+        @AllArgsConstructor
+        public static class RequestParam {
+            #foreach ($column in $api.requestParam)
+                private $column.attrType $column.attrname;
+            #end
+        }
+    #end
+    #if($api.requestHeader)
+        private RequestHeader requestHeader;
+
+        @Data
+        @Builder
+        @AllArgsConstructor
+        public static class RequestHeader {
+            #foreach ($column in $api.requestHeader)
+                private $column.attrType $column.attrname;
+            #end
+
+        }
+    #end
+}
+ 

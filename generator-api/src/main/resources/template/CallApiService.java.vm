@@ -1,0 +1,80 @@
+package ${package}.${moduleName}.api.service;
+
+import java.util.Map;
+
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONUtil;
+#foreach ($api in $apis)
+import ${package}.${moduleName}.api.request.${api.className}Request;
+#end
+/**
+ * @author l2503
+ * @date 2022-02-07
+ */
+public class CallApiService {
+
+
+    #foreach ($api in $apis)
+    /**
+     *
+     */
+    public static String ${api.name}(${api.className}Request request) throws Exception {
+        String url = "${api.url}";
+        #if($api.requestParam)
+            String paramStr = getParamStr(objectToMap2(request.getRequestParam()));
+            url = url + "?" + paramStr;
+        #end
+
+        #if($api.method == "GET")
+            HttpRequest httpRequest = HttpRequest.get(url);
+        #end
+        #if($api.method == "POST")
+            HttpRequest httpRequest = HttpRequest.post(url);
+        #end
+        #if($api.method == "PUT")
+            HttpRequest httpRequest = HttpRequest.put(url);
+        #end
+        #if($api.method == "DELETE")
+            HttpRequest httpRequest = HttpRequest.delete(url);
+        #end
+
+        #if($api.requestBody)
+            httpRequest.body(JSONUtil.toJsonStr(request.getRequestBody()));
+        #end
+        #if($api.requestParam)
+            httpRequest.formStr(objectToMap2(request.getRequestParam()));
+        #end
+        #if($api.requestHeader)
+            httpRequest = httpRequest.headerMap(objectToMap2(request.getRequestHeader()), true);
+        #end
+        HttpResponse httpResponse = httpRequest.execute();
+        if (httpResponse.isOk()) {
+            return httpResponse.body();
+        } else {
+            throw new Exception(httpResponse.body());
+        }
+
+    }
+    #end
+
+    private static String getParamStr(Map<String, String> paramMap) {
+        StringBuilder stringBuilder = new StringBuilder();
+        paramMap.keySet().forEach(s -> {
+            stringBuilder.append(s).append("=").append(paramMap.get(s)).append("&");
+        });
+        return stringBuilder.toString().substring(0, stringBuilder.length() - 1);
+    }
+
+    public static Map<String, String> objectToMap2(Object obj) {
+        return JSONUtil.toBean(JSONUtil.toJsonStr(obj), Map.class);
+    }
+
+    public static void main(String[] args) {
+        GetApiRequest request = GetApiRequest.builder().requestHeader(
+            GetApiRequest.RequestHeader.builder().clientId("test").build())
+            .requestParam(GetApiRequest.RequestParam.builder().phoneNo("15972169511").type("2").build()).build();
+        System.out.println(getApi(request));
+    }
+}
+ 
