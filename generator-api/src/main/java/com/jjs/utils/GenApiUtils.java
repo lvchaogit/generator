@@ -109,7 +109,11 @@ public class GenApiUtils {
      * 列名转换成Java属性名
      */
     public static String columnToJava(String columnName) {
-        return WordUtils.capitalizeFully(columnName, null);
+        return StringUtils.uncapitalize(classToJava(columnName));
+    }
+
+    public static String classToJava(String columnName) {
+        return WordUtils.capitalizeFully(columnName, new char[] {'_'}).replace("_", "");
     }
 
     /**

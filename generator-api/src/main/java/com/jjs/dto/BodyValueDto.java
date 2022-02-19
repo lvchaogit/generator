@@ -1,5 +1,7 @@
 package com.jjs.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -9,7 +11,7 @@ import lombok.Data;
  * @date 2022.2.19
  */
 @Data
-public class ParamValueDto {
+public class BodyValueDto {
 
     /**
      * 字段备注
@@ -24,11 +26,16 @@ public class ParamValueDto {
      * 属性名称(第一个字母小写)，如：user_name => userName
      */
     private String attrname;
-
     /**
      * 属性类型
      */
     private String attrType;
+
+    private Boolean isArray;
+    /**
+     * 属性字段
+     */
+    private List<BodyValueDto> properties;
 
     public String getComments() {
         return comments;

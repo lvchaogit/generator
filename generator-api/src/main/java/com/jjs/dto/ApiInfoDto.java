@@ -18,7 +18,7 @@ public class ApiInfoDto {
     private List<ParamValueDto> requestHeader;
     private List<ParamValueDto> requestParam;
     private List<ParamValueDto> requestFormData;
-    private List<ParamValueDto> requestBody;
+    private List<BodyValueDto> requestBody;
 
     private String className;
 

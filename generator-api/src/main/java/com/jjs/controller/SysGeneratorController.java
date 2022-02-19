@@ -35,7 +35,7 @@ public class SysGeneratorController {
      */
     @RequestMapping("/code")
     public void code(HttpServletResponse response) throws IOException {
-        String url = "C:\\Users\\l2503\\Desktop\\生成接口测试.postman_collection.json";
+        String url = "C:\\Users\\l2503\\Desktop\\一网统管.postman_collection.json";
         byte[] data = postManGeneratorService.generator(url);
 
         response.reset();
