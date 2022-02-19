@@ -39,13 +39,13 @@ public class CallApiService {
             HttpRequest httpRequest = HttpRequest.delete(url);
         #end
 
-        #if($api.requestBody)
+        #if($api.requestBody && $api.requestBody.size() >0)
             httpRequest.body(JSONUtil.toJsonStr(request.getRequestBody()));
         #end
-        #if($api.requestParam)
+        #if($api.requestParam && $api.requestParam.size() >0)
             httpRequest.formStr(objectToMap2(request.getRequestParam()));
         #end
-        #if($api.requestHeader)
+        #if($api.requestHeader && $api.requestHeader.size() >0)
             httpRequest = httpRequest.headerMap(objectToMap2(request.getRequestHeader()), true);
         #end
         HttpResponse httpResponse = httpRequest.execute();

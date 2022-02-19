@@ -3,7 +3,7 @@ package ${package}.${moduleName}.api.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
+import java.util.List;
 /**
  * @author l2503
  * @date 2022-02-07
@@ -17,7 +17,7 @@ public class ${api.className}Request {
     ##    private String[] pathParam;
     ##    #end
 
-    #if($api.requestBody)
+    #if($api.requestBody && $api.requestBody.size() >0)
         private BodyParam requestBody;
 
         @Data
@@ -25,11 +25,15 @@ public class ${api.className}Request {
         @AllArgsConstructor
         public static class BodyParam {
             #foreach ($column in $api.requestBody)
-                private $column.attrType $column.attrname;
+                #if($column.properties)
+                    #digui($column)
+                #else
+                    private $column.attrType $column.attrname;
+                #end
             #end
         }
     #end
-    #if($api.requestFormData)
+    #if($api.requestFormData && $api.requestFormData.size() >0)
         private RequestFormData requestFormData;
 
         @Data
@@ -42,7 +46,7 @@ public class ${api.className}Request {
         }
     #end
 
-    #if($api.requestParam)
+    #if($api.requestParam && $api.requestParam.size() >0)
         private RequestParam requestParam;
 
         @Data
@@ -54,7 +58,7 @@ public class ${api.className}Request {
             #end
         }
     #end
-    #if($api.requestHeader)
+    #if($api.requestHeader && $api.requestHeader.size() >0)
         private RequestHeader requestHeader;
 
         @Data
@@ -67,5 +71,31 @@ public class ${api.className}Request {
 
         }
     #end
+
+
+    #macro(digui $column)
+        #if($column.isArray)
+            private List<${column.attrType}Properties> $column.attrname;
+        #else
+            private ${column.attrType}Properties $column.attrname;
+        #end
+        @Data
+        @Builder
+        @AllArgsConstructor
+        public static class ${column.attrType}Properties {
+            #foreach ($childColumn in $column.properties)
+                #if($childColumn.properties)
+                    #digui($childColumn)
+                #else
+                    #if($childColumn.isArray)
+                        private List<$childColumn.attrType> $childColumn.attrname;
+                    #else
+                        private $childColumn.attrType $childColumn.attrname;
+                    #end
+                #end
+            #end
+        }
+    #end
+
 }
  
